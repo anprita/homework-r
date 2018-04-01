@@ -20,13 +20,48 @@ surveys_combined_clear<- surveys_combined %>% filter(!is.na(sex),
 
 #Check the correlation between species id, the min, max and mean of species_id
 surveys_hindfoot <- surveys_combined %>%
-  group_by(species_id, hindfoot_length) %>%
+  group_by(hindfoot_length, genus, plot_type) %>%
   summarise(mean_w = mean(hindfoot_length),
             min_w = min(hindfoot_length),
             max_w = max(hindfoot_length))
 
+#Check the correlation each plot type and hindfootlength (101)
+length_control <- surveys_hindfoot %>%
+  select(hindfoot_length, plot_type , genus) %>%
+  filter(plot_type == "Control")
+
+length_Longterm <- surveys_hindfoot %>%
+  select(hindfoot_length, plot_type , genus) %>%
+  filter(plot_type == "Long-term Krat Exclosure")
+
+length_rodent <- surveys_hindfoot %>%
+  select(hindfoot_length, plot_type , genus) %>%
+  filter(plot_type == "Rodent Exclosure")
+
+length_shortterm <- surveys_hindfoot %>%
+  select(hindfoot_length, plot_type , genus) %>%
+  filter(plot_type == "Short-term Krat Exclosure")
+
+length_spectab <- surveys_hindfoot %>%
+  select(hindfoot_length, plot_type , genus) %>%
+  filter(plot_type == "Spectab Exclosure")
+
+#Ggplot hindfoot_length and plot_type
+ggplot() +
+  geom_point(data = length_control, aes(x=plot_type, y=hindfoot_length), color = 'green') +
+  geom_point(data = length_Longterm, aes(x=plot_type, y=hindfoot_length), color = 'red') +
+  geom_point(data = length_rodent, aes(x=plot_type, y=hindfoot_length), color = 'blue') +
+  geom_point(data = length_shortterm, aes(x=plot_type, y=hindfoot_length), color = 'yellow') +
+  geom_point(data = length_shortterm, aes(x=plot_type, y=hindfoot_length), color = 'pink') 
+
+  
 #Clear the NA of hindfoot_Length, the min, max and mean
 surveys_hindfoot %>% filter(!is.na(hindfoot_length))
+
+#Make plotting -> ggplot of hindfoot_lenght, min, max and mean of species_id
+ggplot(surveys_hindfoot, aes(x = hindfoot_length, y = species_id)) +
+  geom_boxplot()+xlab("length") + ylab("species_id")
+
       
 #write surveys_combined.csv
 write_csv(surveys_combined_clear, path = "data/output/surveys_combined.csv")
@@ -80,7 +115,7 @@ plot(surveys_combined_clear$hindfoot_length, surveys_combined_clear$weight,
 ##find R-squared and P-value 
 fit<- lm(surveys_combined_clear$weight~surveys_combined_clear$hindfoot_length)
 summary(fit)
-##
+
 #create line chart plot type per year
 year_plot_type <- surveys_combined_clear %>% group_by(year, plot_type) %>% tally()
 line_chart <- ggplot(year_plot_type, aes(x=year, y=n, color=plot_type)) + 
