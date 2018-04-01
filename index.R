@@ -66,7 +66,10 @@ hist(surveys_combined_clear$weight,
 plot(surveys_combined_clear$hindfoot_length, surveys_combined_clear$weight, 
     main="Relationship Length and Weight", 
     xlab = "Hindfoot Length", ylab = "Weight")
-
+##find R-squared and P-value 
+fit<- lm(surveys_combined_clear$weight~surveys_combined_clear$hindfoot_length)
+summary(fit)
+##
 #create line chart plot type per year
 year_plot_type <- surveys_combined_clear %>% group_by(year, plot_type) %>% tally()
 line_chart <- ggplot(year_plot_type, aes(x=year, y=n, color=plot_type)) + 
