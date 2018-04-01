@@ -17,6 +17,17 @@ surveys_combined_clear<- surveys_combined %>% filter(!is.na(sex),
                                                          hindfoot_length != "",
                                                          !is.na(weight), 
                                                          weight != "") 
+
+#Check the correlation between species id, the min, max and mean of species_id
+surveys_hindfoot <- surveys_combined %>%
+  group_by(species_id, hindfoot_length) %>%
+  summarise(mean_w = mean(hindfoot_length),
+            min_w = min(hindfoot_length),
+            max_w = max(hindfoot_length))
+
+#Clear the NA of hindfoot_Length, the min, max and mean
+surveys_hindfoot %>% filter(!is.na(hindfoot_length))
+      
 #write surveys_combined.csv
 write_csv(surveys_combined_clear, path = "data/output/surveys_combined.csv")
 
