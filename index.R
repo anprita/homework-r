@@ -44,7 +44,7 @@ length_shortterm <- surveys_hindfoot %>%
 
 length_spectab <- surveys_hindfoot %>%
   select(hindfoot_length, plot_type , genus) %>%
-  filter(plot_type == "Spectab Exclosure")
+  filter(plot_type == "Spectab exclosure")
 
 #Ggplot hindfoot_length and plot_type
 ggplot() +
@@ -52,7 +52,10 @@ ggplot() +
   geom_point(data = length_Longterm, aes(x=plot_type, y=hindfoot_length), color = 'red') +
   geom_point(data = length_rodent, aes(x=plot_type, y=hindfoot_length), color = 'blue') +
   geom_point(data = length_shortterm, aes(x=plot_type, y=hindfoot_length), color = 'yellow') +
-  geom_point(data = length_shortterm, aes(x=plot_type, y=hindfoot_length), color = 'pink') 
+  geom_point(data = length_spectab, aes(x=plot_type, y=hindfoot_length), color = 'pink') 
+
+#No correlation between hindfoot_length and plot_type:
+#1 Whatever the size of the hindfoot_length, we can use any other plot_type and it will give almost relatively result
 
   
 #Clear the NA of hindfoot_Length, the min, max and mean
