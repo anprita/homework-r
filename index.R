@@ -246,10 +246,59 @@ hist(surveys_combined_clear$weight,
 plot(surveys_combined_clear$hindfoot_length, surveys_combined_clear$weight, 
     main="Relationship Length and Weight", 
     xlab = "Hindfoot Length", ylab = "Weight")
+
+
+#correlation weight per plot type 
+
+#create variable to show weight in plot type : control
+weight_ltk_control <- surveys_combined_clear %>% filter(plot_type == 'Control' | plot_type == 'Long-term Krat Exclosure') 
+weight_control <- surveys_combined_clear %>% filter(plot_type == 'Control') %>% select(weight)
+weight_ltk_exclosure <- surveys_combined_clear %>% filter(plot_type == 'Long-term Krat Exclosure') %>% select(weight)
+weight_rodent_exclosure <- surveys_combined_clear %>% filter(plot_type == 'Rodent Exclosure') %>% select(weight)
+weight_stk__exclosure <- surveys_combined_clear %>% filter(plot_type == 'Short-term Krat Exclosure') %>% select(weight)
+weight_s_exclosure <- surveys_combined_clear %>% filter(plot_type == 'Spectab exclosure') %>% select(weight)
+
+temp <- left_join(weight_control, weight_ltk_exclosure)
+
+
+weight.plotype<- data.frame(weight= surveys_combined_clear$weight, plot_type = surveys_combined_clear$plot_type)
+wg.control <- weight.plotype %>% filter (plot_type == "Control")
+wg.rodent <- weight.plotype %>% filter (plot_type == 'Rodent Exclosure') 
+
+
+weight <- list(weight_control, weight_ltk_exclosure, weight_rodent_exclosure, weight_stk__exclosure, weight_s_exclosure)
+
+### combine the year columns into a single column with separate rows for each year; assign to new vector
+pop_long <- gather(pop_wide,year,population,-country)
+
+cc3 <- as.data.frame(table(unlist(weight_control, weight_ltk_exclosure, weight_rodent_exclosure, weight_stk__exclosure, weight_s_exclosure)))
+
+weight <- join(weight_control, weight_ltk_exclosure)
+
+
+weight <- matrix(c(weight_control, weight_ltk_exclosure, weight_rodent_exclosure, weight_s_exclosure ),ncol=4,byrow=TRUE)
+colnames(weight) <- c("control","Long-term Krat Exclosure","Rodent Exclosure", "Short-term Krat Exclosure", "Spectab exclosure")
+
+weight <- paste(weight_control, weight_ltk_exclosure, weight_rodent_exclosure, weight_s_exclosure)
+
+ggplot(weight_ltk_control, group_by(plot_type,weight), aes(color=plot_type, y=weight))
+
+ggplot(weight_ltk_control, aes(x=plot_type, y=weight))+
+  geom_point(size=2, shape=23)+xlab("plot type")+ylab("Weight (g)")
+
+
+
+
+
+
 ##find R-squared and P-value 
 fit<- lm(surveys_combined_clear$weight~surveys_combined_clear$hindfoot_length)
 summary(fit)
 
+<<<<<<< HEAD
+=======
+##
+>>>>>>> 76f77eb44d648998c0577d251f4d5c35676a4d6a
 #create line chart plot type per year
 year_plot_type <- surveys_combined_clear %>% group_by(year, plot_type) %>% tally()
 line_chart <- ggplot(year_plot_type, aes(x=year, y=n, color=plot_type)) + 
