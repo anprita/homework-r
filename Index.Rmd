@@ -9,7 +9,17 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-## Data Visualisation Using R  
+## Data Visualization in R : Long-term monitoring of a rodent community
+
+Our homework is analyzing database of a long term monitoring for rodent community in Chihuahuan Desert ecosystem near Portal, Arizona, from 1977 to 2000. At this site, 24 experimental plots were established in 1977 and divided among controls and experimental manipulations. 
+
+The long-term data for the rodent community at the Portal Project has been used to address a variety of questions including
+<u>
+  <li>Tool to monitor the community- and population-level dynamics of desert rodents and competitive interactions among rodent species.</li>
+  <li>Responses of rodents to climatic variability.</li>
+  <li>The long-term stability and dynamics of a desert rodent community.</li>
+</u>  
+
 
 This is an R Homework documentation. The process of data visualisation using R can be divided into four steps : 
 <ul>
