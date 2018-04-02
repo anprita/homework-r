@@ -6,6 +6,8 @@ library(ggplot2)
 library(dbplyr)
 library(RSQLite)
 library(DBI)
+install.packages("ggpmisc")
+library(ggpmisc)
 
 #load data from combined.csv
 surveys_combined <- read.csv("data/combined.csv")
@@ -17,6 +19,184 @@ surveys_combined_clear<- surveys_combined %>% filter(!is.na(sex),
                                                          hindfoot_length != "",
                                                          !is.na(weight), 
                                                          weight != "") 
+
+
+#Check the correlation each plot type and hindfootlength 
+## Weight and Hindfoot_length in Control plot
+lw_control <- surveys_combined %>% 
+  filter(!is.na(hindfoot_length), !is.na(weight)) %>%
+  select(hindfoot_length, weight , genus, plot_type) %>%
+  filter(plot_type == "Control")
+
+#- Check names 
+names(lw_control)
+#- Attach the data
+attach(lw_control)
+#- Check the type of variable for weight and hindfoot_length in control plot
+class(weight)
+class(hindfoot_length)
+plot(weight, hindfoot_length, main = "The relationship weight and hindfoot_length in control plottype")
+cor(weight, hindfoot_length)
+lw_controlstat <- lm(hindfoot_length ~ weight)
+summary(lw_controlstat)
+
+## Weight and Hindfoot_length in Long-term Krat Exclosure plot (2)
+lw_longterm <- surveys_combined %>% 
+  filter(!is.na(hindfoot_length), !is.na(weight)) %>%
+  select(hindfoot_length, weight , genus, plot_type) %>%
+  filter(plot_type == "Long-term Krat Exclosure")
+
+#- Check & Statistics
+names(lw_longterm)
+attach(lw_longterm)
+class(weight)
+class(hindfoot_length)
+plot(weight, hindfoot_length, main = "The relationship weight and hindfoot_length in longterm plottype")
+cor(weight, hindfoot_length)
+lw_longtermstat <- lm(hindfoot_length ~ weight)
+summary(lw_longtermstat)
+
+
+## Weight and Hindfoot_length in Rodent Exclosure plot (3)
+lw_rodent <- surveys_combined %>% 
+  filter(!is.na(hindfoot_length), !is.na(weight)) %>%
+  select(hindfoot_length, weight , genus, plot_type) %>%
+  filter(plot_type == "Rodent Exclosure")
+
+#- Check & Statistics
+names(lw_rodent)
+attach(lw_rodent)
+class(weight)
+class(hindfoot_length)
+plot(weight, hindfoot_length, main = "The relationship weight and hindfoot_length in rodent plottype")
+cor(weight, hindfoot_length)
+lw_rodentstat <- lm(hindfoot_length ~ weight)
+summary(lw_rodentstat)
+
+## Weight and Hindfoot_length in Short Term Exclosure plot (4)
+lw_shortterm <- surveys_combined %>% 
+  filter(!is.na(hindfoot_length), !is.na(weight)) %>%
+  select(hindfoot_length, weight , genus, plot_type) %>%
+  filter(plot_type == "Short-term Krat Exclosure")
+
+#- Check & Statistics
+names(lw_shortterm)
+attach(lw_shortterm)
+class(weight)
+class(hindfoot_length)
+plot(weight, hindfoot_length, main = "The relationship weight and hindfoot_length in shortterm plottype")
+cor(weight, hindfoot_length)
+lw_shorttermstat <- lm(hindfoot_length ~ weight)
+summary(lw_shorttermstat)
+
+## Weight and Hindfoot_length in Spectab Exclosure plot (5)
+lw_spectab <- surveys_combined %>% 
+  filter(!is.na(hindfoot_length), !is.na(weight)) %>%
+  select(hindfoot_length, weight , genus, plot_type) %>%
+  filter(plot_type == "Spectab exclosure")
+
+#- Check & Statistics
+names(lw_spectab)
+attach(lw_spectab)
+class(weight)
+class(hindfoot_length)
+plot(weight, hindfoot_length, main = "The relationship weight and hindfoot_length in spectab plottype")
+cor(weight, hindfoot_length)
+lw_spectabstat <- lm(hindfoot_length ~ weight)
+summary(lw_spectabstat)
+
+
+lengthplot <- ggplot(data = length_control, x='genus', y='hindfoot_length', color ="genus") + 
+theme(axis.line = element_line(size = 1.5), axis.text.x = element_text(angle = 45, vjust = 0.5)
+      
+ggsave("lengthplot.jpg")
+
+
+length_control <- surveys_combined %>% 
+  filter(!is.na(hindfoot_length)) %>%
+  select(hindfoot_length, plot_type , genus) %>%
+  filter(plot_type == "Control")
+
+length_Longterm <- surveys_hindfoot %>%
+  select(hindfoot_length, plot_type , genus) %>%
+  filter(plot_type == "Long-term Krat Exclosure")
+
+length_rodent <- surveys_hindfoot %>%
+  select(hindfoot_length, plot_type , genus) %>%
+  filter(plot_type == "Rodent Exclosure")
+
+length_shortterm <- surveys_hindfoot %>%
+  select(hindfoot_length, plot_type , genus) %>%
+  filter(plot_type == "Short-term Krat Exclosure")
+
+length_spectab <- surveys_hindfoot %>%
+  select(hindfoot_length, plot_type , genus) %>%
+  filter(plot_type == "Spectab exclosure")
+
+#Check the correlation statistics each plot
+length_control <- surveys_hindfoot %>%
+  select(hindfoot_length, plot_type , genus) %>%
+  filter(plot_type == "Control")
+
+ggplot(length_control, aes(x=plot_type, y=hindfoot_length)) + 
+  geom_point(color='green', size = 4) +
+  geom_smooth(method = lm, se=FALSE, fullrange=TRUE, color='red')
+length_control <- cor(plot_type, hindfoot_length, method = 'pearson')
+
+
+
+length_Longterm <- surveys_hindfoot %>%
+  select(hindfoot_length, plot_type , genus) %>%
+  filter(plot_type == "Long-term Krat Exclosure")
+
+length_rodent <- surveys_hindfoot %>%
+  select(hindfoot_length, plot_type , genus) %>%
+  filter(plot_type == "Rodent Exclosure")
+
+length_shortterm <- surveys_hindfoot %>%
+  select(hindfoot_length, plot_type , genus) %>%
+  filter(plot_type == "Short-term Krat Exclosure")
+
+length_spectab <- surveys_hindfoot %>%
+  select(hindfoot_length, plot_type , genus) %>%
+  filter(plot_type == "Spectab exclosure") 
+
+#Ggplot hindfoot_length and plot_type
+rel_length_plot <- ggplot() +
+  geom_point(data = length_control, aes(x=plot_type, y=hindfoot_length), color = 'green') +
+  geom_point(data = length_Longterm, aes(x=plot_type, y=hindfoot_length), color = 'red') +
+  geom_point(data = length_rodent, aes(x=plot_type, y=hindfoot_length), color = 'blue') +
+  geom_point(data = length_shortterm, aes(x=plot_type, y=hindfoot_length), color = 'yellow') +
+  geom_point(data = length_spectab, aes(x=plot_type, y=hindfoot_length), color = 'pink') 
+
+ggsave("image/rellengthplot.jpg", rel_length_plot, width=11, dpi=300)
+
+  select(hindfoot_length, plot_type , genus) %>%
+  filter(plot_type == "Control")
+
+# Add correlation coefficient
+wg + stat_cor(method = "pearson", label.x = 1995, label.y = 200)
+# Extend the regression lines beyond the domain of the data
+
+View(length_plottype)
+#From the table, it gives relatively the same results, No correlation between hindfoot_length and plot_type".
+#1 Whatever the size of the hindfoot_length, we can use any other plot_type and it will give almost relatively result
+
+install.packages("ggpubr")
+library("ggpubr")
+
+fit<- lm(surveys$weight~surveys_combined_clear$hindfoot_length)
+summary(fit)
+
+
+#Clear the NA of hindfoot_Length, the min, max and mean
+surveys_hindfoot %>% filter(!is.na(hindfoot_length))
+
+#Make plotting -> ggplot of hindfoot_lenght, min, max and mean of species_id
+ggplot(surveys_hindfoot, aes(x = hindfoot_length, y = species_id)) +
+  geom_boxplot()+xlab("length") + ylab("species_id")
+
+      
 #write surveys_combined.csv
 write_csv(surveys_combined_clear, path = "data/output/surveys_combined.csv")
 
@@ -115,7 +295,10 @@ ggplot(weight_ltk_control, aes(x=plot_type, y=weight))+
 fit<- lm(surveys_combined_clear$weight~surveys_combined_clear$hindfoot_length)
 summary(fit)
 
+<<<<<<< HEAD
+=======
 ##
+>>>>>>> 76f77eb44d648998c0577d251f4d5c35676a4d6a
 #create line chart plot type per year
 year_plot_type <- surveys_combined_clear %>% group_by(year, plot_type) %>% tally()
 line_chart <- ggplot(year_plot_type, aes(x=year, y=n, color=plot_type)) + 
