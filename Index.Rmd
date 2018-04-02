@@ -5,25 +5,33 @@ date: "March 29, 2018"
 output: html_document
 ---
 
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
 ## Data Visualization in R : Long-term monitoring of a rodent community
 
-Our homework is analyzing database of a long term monitoring for rodent community in Chihuahuan Desert ecosystem near Portal, Arizona, from 1977 to 2000. At this site, 24 experimental plots were established in 1977 and divided among controls and experimental manipulations. 
-
-The long-term data for the rodent community at the Portal Project has been used to address a variety of questions including
-<u>
-  <li>Tool to monitor the community and population-level dynamics of desert rodents & competitive interactions among rodent species.</li>
+Our homework is analyzing database of a long term monitoring for rodent community in Chihuahuan Desert ecosystem near Portal, Arizona, from 1977 to 2000. At this site, 24 experimental plots were established in 1977 and divided among controls and experimental manipulations. The long-term data for the rodent community at the Portal Project has been used to address a variety of questions including
+<ul>
+  <li>Monitoring the population-level dynamics of desert rodents & competitive interactions among rodent species.</li>
   <li>Responses of rodents to climatic variability.</li>
   <li>The long-term stability and dynamics of a desert rodent community.</li>
-</u>  
+</ul>  
 
+This is an R Homework documentation. The process of data visualisation using R can be 
+divided into four steps : 
 
-This is an R Homework documentation. The process of data visualisation using R can be divided into four steps : 
 <ul>
   <li>Load the library</li>
   <li>Read the data file</li>
-  <li>Connect to database sqlite</li>
   <li>Data Cleansing</li>
-  <li>Data Plotting</li>
+  <li>Prita : Time series of plot type per year</li>
+  <li>Prita : Time series of plot type per sex</li>
+  <li>Supria : Correlation between hindfoot length and weight</li>
+  <li>Supria : Correlation between hindfoot length and weight</li>
+  <li>Heva : Correlation between hindfoot length and genus</li>
+  <li>Heva : Correlation between hindfoot length and genus</li>
+  <li>Data Analyzing</li>
 </ul>
 
 <strong>Load the library</strong>
@@ -34,10 +42,7 @@ library(lubridate)
 library(gridExtra)
 library(ggplot2)
 library(dbplyr)
-library(RSQLite)
-library(DBI)
 ```
-
 
 <strong>Reading the data file</strong>
 
@@ -46,10 +51,6 @@ surveys_combined <- read.csv("data/combined.csv")
 ```
 
 <strong>Connect to database sqlite</strong>
-
-```{r connect}
-mammal_db <- dbConnect(dbDriver("SQLite"), "data/portal_mammals.sqlite")
-```
 
 <strong>Data Cleansing</strong>
 
@@ -62,17 +63,6 @@ surveys_combined_clear<- surveys_combined %>% filter(!is.na(sex),
                                                          weight != "") 
 ```
 
-```{r clear2}
-surveys_db <- dbGetQuery(mammal_db, "select surveys.*, species.species, species.taxa, species.genus,
-                                      plots.plot_type
-                                      from surveys, species, plots
-                                      where surveys.species_id = species.species_id
-                                      and surveys.plot_id = plots.plot_id
-                                      and surveys.sex <> 'NA'
-                                      and surveys.hindfoot_length <> 'NA'
-                                      and surveys.weight <> 'NA'
-                                    ")
-```
 
 <strong>Data Plotting</strong>
 
@@ -113,14 +103,28 @@ frequency_plot <- grid.arrange(boxplot_chart_weight, boxplot_chart_length, ncol=
 ggsave("image/plot2.jpg", frequency_plot, width=10, dpi=300)
 ```
 
+```{r plot3}
+#supria
 
+```
 
-## Analyzing the Plot
+```{r plot4}
+#supria
 
-<strong>To Do List</strong>
-<ul>
-<li>find the correlation and p-value & R-square</li>
-<li>tidy up the RMarkdown documentation</li>
-</ul>
+```
 
-To be continued ... 
+```{r plot5}
+#supria
+
+```
+
+```{r plot6}
+#heva
+
+```
+
+```{r plot7}
+#heva
+
+```
+
