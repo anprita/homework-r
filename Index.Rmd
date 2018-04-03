@@ -27,8 +27,9 @@ divided into four steps :
   <li>Clean the data</li>
   <li>Prita : Time series of plot type per year</li>
   <li>Prita : Time series of plot type per sex</li>
-  <li>Supria : Correlation between hindfoot length and weight</li>
-  <li>Supria : Correlation between hindfoot length and weight</li>
+  <li>Supria : Correlation between length of hindfoot and weight of animal</li>
+  <li>Supria : Changes of weight over the year based on each plot type</li>
+  <li>Supria : Changes of length of hindfoot  over the year based on each plot      type</li>
   <li>Heva : Correlation between hindfoot length and genus</li>
   <li>Heva : Correlation between hindfoot length and genus</li>
 </ul>
@@ -41,6 +42,7 @@ library(lubridate)
 library(gridExtra)
 library(ggplot2)
 library(dbplyr)
+library(ggpubr)
 ```
 
 <strong>Read the data file</strong>
@@ -112,19 +114,55 @@ ggsave("image/plot2.jpg", frequency_plot, width=10, dpi=300)
 ```
 
 ```{r plot3}
-#supria
-
+# Created by supria
+# Scatter plot with correlation coefficient
+#:::::::::::::::::::::::::::::::::::::::::::::::::
+sp <- ggscatter(surveys_combined_clear, x = "hindfoot_length", y = "weight",title = "Relationship between weight and length of hindfoot", xlab = "length of hindfoot (mm)", ylab = "Weightof animal(gm)",
+                add = "reg.line",  # Add regressin line
+                add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
+                conf.int = TRUE # Add confidence interval
+)
+# Add correlation coefficient
+final.plot<- sp + stat_cor(method = "pearson", label.x = 10, label.y = 200)
+final.plot
+#save plot into image
+ggsave("image/plot3.jpg", final.plot, width=10, dpi=300)
 ```
-
+This plot means that what is the relationship between weight of animal and length of hindfoot length. Using statistic analysis we found that thera is linear correlation. And the value of R-squared is greater than .5. It has shown there is 68% linearly correlated. 
 ```{r plot4}
-#supria
-
+# created by supria
+wg<- ggscatter(data=surveys_combined_clear, x='year',y='weight', color ="plot_type",shape = "plot_type",
+               title = "Weight changes over the year based on each plot type", xlab = "Year", ylab = "Weight of animal(gm)",
+          add = "reg.line",  # Add regressin line
+          add.params = list(color = "blue","red","green","yellow","pink", fill = "lightgray"), # Customize reg. line
+          conf.int = TRUE # Add confidence interval
+ )  
+# Add correlation coefficient
+final.wg <- wg + stat_cor(method = "pearson", label.x = 1995, label.y = 200)
+final.wg
+ggsave("image/plot4.jpg", final.wg, width=10, dpi=300)
 ```
+This plot explains about what is the change of weight over the year for each plot_type. It has shown that there is no relationship of weight over the year.
+R-squared value explains that -.27 which is very low.
 
 ```{r plot5}
-#supria
+# Created by supria
+# Extend the regression lines beyond the domain of the data
+##hindfoot changes over the year
 
+hd<- ggscatter(data=surveys_combined_clear, x='year',y='hindfoot_length', color ="plot_type",shape = "plot_type",
+               title = "Hindfoot length changes over the year based on each plot type", xlab = "Year", ylab = "length of Hindfoot(mm)",
+               add = "reg.line",  # Add regressin line
+               add.params = list(color = "blue","red","green","yellow","pink", fill = "lightgray"), # Customize reg. line
+               conf.int = TRUE # Add confidence interval
+)  
+# Add correlation coefficient
+final.hd<- hd + stat_cor(method = "pearson", label.x = 1995, label.y = 200)
+final.hd
+ggsave("image/plot5.jpg", final.wg, width=10, dpi=300)
 ```
+This plot explains about what is the change of length of hindfoot over the year for each plot_type. It has shown that there is no relationship of weight over the year.
+R-squared value explains that -.28 which is very low.
 
 ```{r plot6}
 #heva
