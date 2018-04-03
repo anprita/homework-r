@@ -26,9 +26,9 @@ Index.R:
 We created this Rfile so that we can put our all code togather for exploring different plots.
 
 
-Index_pr.R:
+Index.pdf:
 
-Prita created this Rfile for exploring different plots by ownself.
+We created knited pdf file where you can see all codes and also the plots that we created through our codes.
 
 
 
