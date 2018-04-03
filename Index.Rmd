@@ -1,8 +1,10 @@
 ---
 title: "R Homework"
-author: "prita, heva, supria"
+author: "Heva, Prita, Supria"
 date: "March 29, 2018"
-output: html_document
+output:
+  html_document: default
+  pdf_document: default
 ---
 
 ```{r setup, include=FALSE}
@@ -11,27 +13,24 @@ knitr::opts_chunk$set(echo = TRUE)
 
 ## Data Visualization in R : Long-term monitoring of a rodent community
 
-Our homework is analyzing database of a long term monitoring for rodent community in Chihuahuan Desert ecosystem near Portal, Arizona, from 1977 to 2000. At this site, 24 experimental plots were established in 1977 and divided among controls and experimental manipulations. The long-term data for the rodent community at the Portal Project has been used to address a variety of questions including
+Our homework is analyzing database of a long term monitoring for rodent community in Chihuahuan Desert ecosystem near Portal, Arizona, from 1977 to 2000. At this site, 24 experimental plots were established in 1977 and divided among controls and experimental manipulations. The long-term data for the rodent community at the Portal Project has been used to address a variety of questions including 
 <ul>
   <li>Monitoring the population-level dynamics of desert rodents & competitive interactions among rodent species.</li>
   <li>Responses of rodents to climatic variability.</li>
   <li>The long-term stability and dynamics of a desert rodent community.</li>
 </ul>  
 
-This is our R-homework documentation. The process of data visualisation using R can be 
-divided into four steps : 
-
+This is our R-homework documentation. The process of data visualisation using R can be divided into four steps : 
 <ul>
   <li>Load the library</li>
   <li>Read the data file</li>
   <li>Clean the data</li>
-  <li>Prita : Time series of plot type per year</li>
-  <li>Prita : Time series of plot type per sex</li>
-  <li>Supria : Correlation between length of hindfoot and weight of animal</li>
-  <li>Supria : Changes of weight over the year based on each plot type</li>
-  <li>Supria : Changes of length of hindfoot  over the year based on each plot      type</li>
-  <li>Heva : Correlation between hindfoot length and genus</li>
-  <li>Heva : Correlation between hindfoot length and genus</li>
+  <li>Time series data of sex and number of sample per plot type</li>
+  <li>Correlation between length of hindfoot and weight of animal</li>
+  <li>Changes of weight over the year based on each plot type</li>
+  <li>Changes of length of hindfoot  over the year based on each plot type</li>
+  <li>Correlation between hindfoot length and genus</li>
+  <li>Correlation between hindfoot length and genus</li>
 </ul>
 
 <strong>Load the library</strong>
@@ -47,16 +46,20 @@ library(ggpubr)
 
 <strong>Read the data file</strong>
 
+Our team decide to read the combined.csv file because it has the most comprehensive, consise, and compact data. 
+
 ```{r read}
 surveys_combined <- read.csv("data/combined.csv")
 ```
+Below is the information about the data structure:
 
-Our team decide to read the combined.csv file because it has the most comprehensive, consise, and compact data. Below is the information about the data structure:
 <div id="str">
   <img src="image/str.png" alt="">
 </div> 
 
 <strong>Clean the data</strong>
+
+Our team read the raw data and transform it into consistent data that can be analyzed. It is aimed at improving the content of statistical statements based on the data as well as their reliability. This proces is Data Cleaning. In this homework, we ignore the missing data ('', NULL, is.Na).
 
 ```{r clear1}
 surveys_combined_clear<- surveys_combined %>% filter(!is.na(sex), 
@@ -66,7 +69,8 @@ surveys_combined_clear<- surveys_combined %>% filter(!is.na(sex),
                                                          !is.na(weight), 
                                                          weight != "") 
 ```
-Our team read the raw data and transform it into consistent data that can be analyzed. It is aimed at improving the content of statistical statements based on the data as well as their reliability. This proces is Data Cleaning. In this homework, we ignore the missing data ('', NULL, is.Na). The result is : 
+
+The result of data cleaning : 
 
 <table border="1">
 <tr><th colspan="2">&nbsp; Data Cleaning &nbsp;</th></tr>
@@ -74,9 +78,17 @@ Our team read the raw data and transform it into consistent data that can be ana
 <tr><td>&nbsp; 34,786 &nbsp;</td><td>&nbsp; 30,676 &nbsp;</td></tr>
 </table>
 <br/>
-<strong>Data Plotting</strong>
 
-```{r plot1}
+For the simple distribution tables below the 1st and 3rd Qu. refer to the first and third quartiles, indicating that 25% 
+of the observations have values of that variable which are less than or greater than (respectively) the value listed.
+
+<div id="str">
+  <img src="image/stat.png" alt="">
+</div> 
+
+<strong>Time series data of sex and number of sample per plot type</strong>
+  
+```{r plot1, warning=FALSE, message=FALSE}
 #create line chart plot type per year
 year_plot_type <- surveys_combined_clear %>% group_by(year, plot_type) %>% tally()
 line_chart <- ggplot(year_plot_type, aes(x=year, y=n, color=plot_type)) + 
@@ -88,32 +100,35 @@ bar_chart <- ggplot(year_sex, aes(x=year, y=n, color=sex)) +
   geom_bar(stat="identity") + xlab("Year") + ylab("Sex")
 
 #put chart to grid
-timeseries_plot <- grid.arrange(bar_chart, line_chart, ncol=2, widths=c(4,6))
+timeseries_plot <- grid.arrange(line_chart, bar_chart, ncol=2, widths=c(9,6))
 
 #save plot into image
-ggsave("image/plot1.jpg", timeseries_plot, width=10, dpi=300)
+ggsave("image/plot1.jpg", timeseries_plot, width=15, dpi=300)
 ```
 
+The line graph illustrates the number of rodent sample among controls and other experimental manipulations. Each sample indicates data for every desert rodent caught on the 20 ha. And the bar graph shows the number of rodent differentiate by sex. Overall, there is a trend of decreasing number of sample but it increase in 2000. 
 
-```{r plot2}
+```{r plot2, warning=FALSE, message=FALSE}
 #create boxplot chart weight per plot_type
-boxplot_chart_weight <- ggplot(surveys_combined_clear, aes(x=plot_type, y=weight))+
-  geom_boxplot()+xlab("plot type")+ylab("Weight (g)") +  geom_jitter() +
-  scale_y_log10()
+boxplot_chart_weight <- ggplot(surveys_combined_clear, aes(x=weight, y=plot_type))+
+  geom_boxplot()+xlab("Weight (gr)")+ylab("Plot Type") +  geom_jitter()
 
 #create boxplot chart hindfoot length per plot_type
-boxplot_chart_length <- ggplot(surveys_combined_clear, aes(x=plot_type, y=hindfoot_length))+
-  geom_boxplot()+xlab("plot type")+ylab("Length") + geom_jitter()
-  scale_y_log10()
+boxplot_chart_length <- ggplot(surveys_combined_clear, aes(x=hindfoot_length, y=plot_type))+
+  geom_boxplot()+xlab("Hindfoot Length (mm)")+ylab("Plot Type") + geom_jitter()
 
 #put chart to grid
-frequency_plot <- grid.arrange(boxplot_chart_weight, boxplot_chart_length, ncol=2, widths=c(5,5))
+frequency_plot <- grid.arrange(boxplot_chart_length, boxplot_chart_weight, ncol=2, widths=c(8,7))
 
 #save plot into image
-ggsave("image/plot2.jpg", frequency_plot, width=10, dpi=300)
+ggsave("image/plot2.jpg", frequency_plot, width=15, dpi=300)
 ```
 
-```{r plot3}
+This boxplot graph explain the distribution of hindfoot length and weight per plot type. Detail correlation will be explain below. 
+
+<strong>Correlation between length of hindfoot and weight of animal</strong>
+
+```{r plot3, warning=FALSE, message=FALSE}
 # Created by supria
 # Scatter plot with correlation coefficient
 #:::::::::::::::::::::::::::::::::::::::::::::::::
@@ -129,7 +144,9 @@ final.plot
 ggsave("image/plot3.jpg", final.plot, width=10, dpi=300)
 ```
 This plot means that what is the relationship between weight of animal and length of hindfoot length. Using statistic analysis we found that thera is linear correlation. And the value of R-squared is greater than .5. It has shown there is 68% linearly correlated. 
-```{r plot4}
+
+<strong>Changes of weight over the year based on each plot type</strong>
+```{r plot4, warning=FALSE, message=FALSE}
 # created by supria
 wg<- ggscatter(data=surveys_combined_clear, x='year',y='weight', color ="plot_type",shape = "plot_type",
                title = "Weight changes over the year based on each plot type", xlab = "Year", ylab = "Weight of animal(gm)",
@@ -145,7 +162,8 @@ ggsave("image/plot4.jpg", final.wg, width=10, dpi=300)
 This plot explains about what is the change of weight over the year for each plot_type. It has shown that there is no relationship of weight over the year.
 R-squared value explains that -.27 which is very low.
 
-```{r plot5}
+<strong>Changes of length of hindfoot  over the year based on each plot type</strong>
+```{r plot5, warning=FALSE, message=FALSE}
 # Created by supria
 # Extend the regression lines beyond the domain of the data
 ##hindfoot changes over the year
@@ -164,11 +182,14 @@ ggsave("image/plot5.jpg", final.wg, width=10, dpi=300)
 This plot explains about what is the change of length of hindfoot over the year for each plot_type. It has shown that there is no relationship of weight over the year.
 R-squared value explains that -.28 which is very low.
 
+<strong>Heva : Correlation between hindfoot length and genus</strong>
 ```{r plot6}
 #heva
 
 ```
 
+
+<strong>Heva : Correlation between hindfoot length and genus</strong>
 ```{r plot7}
 #heva
 

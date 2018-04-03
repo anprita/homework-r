@@ -6,8 +6,9 @@ library(ggplot2)
 library(dbplyr)
 library(RSQLite)
 library(DBI)
-install.packages("ggpmisc")
+#install.packages("ggpmisc")
 library(ggpmisc)
+library(rattle)
 
 #load data from combined.csv
 surveys_combined <- read.csv("data/combined.csv")
