@@ -18,20 +18,19 @@ Our homework is analyzing database of a long term monitoring for rodent communit
   <li>The long-term stability and dynamics of a desert rodent community.</li>
 </ul>  
 
-This is an R Homework documentation. The process of data visualisation using R can be 
+This is our R-homework documentation. The process of data visualisation using R can be 
 divided into four steps : 
 
 <ul>
   <li>Load the library</li>
   <li>Read the data file</li>
-  <li>Data Cleansing</li>
+  <li>Clean the data</li>
   <li>Prita : Time series of plot type per year</li>
   <li>Prita : Time series of plot type per sex</li>
   <li>Supria : Correlation between hindfoot length and weight</li>
   <li>Supria : Correlation between hindfoot length and weight</li>
   <li>Heva : Correlation between hindfoot length and genus</li>
   <li>Heva : Correlation between hindfoot length and genus</li>
-  <li>Data Analyzing</li>
 </ul>
 
 <strong>Load the library</strong>
@@ -44,15 +43,18 @@ library(ggplot2)
 library(dbplyr)
 ```
 
-<strong>Reading the data file</strong>
+<strong>Read the data file</strong>
 
 ```{r read}
 surveys_combined <- read.csv("data/combined.csv")
 ```
 
-<strong>Connect to database sqlite</strong>
+Our team decide to read the combined.csv file because it has the most comprehensive, consise, and compact data. Below is the information about the data structure:
+<div id="str">
+  <img src="image/str.png" alt="">
+</div> 
 
-<strong>Data Cleansing</strong>
+<strong>Clean the data</strong>
 
 ```{r clear1}
 surveys_combined_clear<- surveys_combined %>% filter(!is.na(sex), 
@@ -62,8 +64,14 @@ surveys_combined_clear<- surveys_combined %>% filter(!is.na(sex),
                                                          !is.na(weight), 
                                                          weight != "") 
 ```
+Our team read the raw data and transform it into consistent data that can be analyzed. It is aimed at improving the content of statistical statements based on the data as well as their reliability. This proces is Data Cleaning. In this homework, we ignore the missing data ('', NULL, is.Na). The result is : 
 
-
+<table border="1">
+<tr><th colspan="2">&nbsp; Data Cleaning &nbsp;</th></tr>
+<tr><th>&nbsp; Before &nbsp;</th><th>&nbsp; After &nbsp;</th></tr>
+<tr><td>&nbsp; 34,786 &nbsp;</td><td>&nbsp; 30,676 &nbsp;</td></tr>
+</table>
+<br/>
 <strong>Data Plotting</strong>
 
 ```{r plot1}
