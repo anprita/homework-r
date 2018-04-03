@@ -77,36 +77,46 @@ hist(surveys_combined_clear$weight,
 
 # Scatter plot with correlation coefficient
 #:::::::::::::::::::::::::::::::::::::::::::::::::
-sp <- ggscatter(surveys_combined_clear, x = "hindfoot_length", y = "weight",title = "Relationship between weight and hindfoot_length", xlab = "Hindfoot_length(mm)", ylab = "weight(gm)",
+sp <- ggscatter(surveys_combined_clear, x = "hindfoot_length", y = "weight",title = "Relationship between weight and length of hindfoot", xlab = "length of hindfoot (mm)", ylab = "Weight of animal(gm)",
                 add = "reg.line",  # Add regressin line
                 add.params = list(color = "blue", fill = "lightgray"), # Customize reg. line
                 conf.int = TRUE # Add confidence interval
 )
 # Add correlation coefficient
-sp + stat_cor(method = "pearson", label.x = 10, label.y = 200)
+final.plot<- sp + stat_cor(method = "pearson", label.x = 10, label.y = 200)
+#save plot into image
+ggsave("image/plot3.jpg", final.plot, width=10, dpi=300)
+
 
 # Extend the regression lines beyond the domain of the data
 ##weight changes over the year
 
 wg<- ggscatter(data=surveys_combined_clear, x='year',y='weight', color ="plot_type",shape = "plot_type",
+               title = "Weight changes over the year based on each plot type", xlab = "Year", ylab = "Weight of animal(gm)",
           add = "reg.line",  # Add regressin line
           add.params = list(color = "blue","red","green","yellow","pink", fill = "lightgray"), # Customize reg. line
           conf.int = TRUE # Add confidence interval
  )  
 # Add correlation coefficient
-wg + stat_cor(method = "pearson", label.x = 1995, label.y = 200)
+final.wg <- wg + stat_cor(method = "pearson", label.x = 1995, label.y = 200)
+final.wg
+ggsave("image/plot4.jpg", final.wg, width=10, dpi=300)
+
+
+
 # Extend the regression lines beyond the domain of the data
 ##hindfoot changes over the year
 
 hd<- ggscatter(data=surveys_combined_clear, x='year',y='hindfoot_length', color ="plot_type",shape = "plot_type",
+               title = "Hindfoot length changes over the year based on each plot type", xlab = "Year", ylab = "length of Hindfoot(mm)",
                add = "reg.line",  # Add regressin line
                add.params = list(color = "blue","red","green","yellow","pink", fill = "lightgray"), # Customize reg. line
                conf.int = TRUE # Add confidence interval
 )  
 # Add correlation coefficient
-hd + stat_cor(method = "pearson", label.x = 1995, label.y = 200)
-
-
+final.hd<- hd + stat_cor(method = "pearson", label.x = 1995, label.y = 200)
+final.hd
+ggsave("image/plot5.jpg", final.wg, width=10, dpi=300)
 #create line chart plot type per year
 year_plot_type <- surveys_combined_clear %>% group_by(year, plot_type) %>% tally()
 line_chart <- ggplot(year_plot_type, aes(x=year, y=n, color=plot_type)) + 
