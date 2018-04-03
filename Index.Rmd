@@ -29,7 +29,7 @@ This is our R-homework documentation. The process of data visualisation using R 
   <li>Correlation between length of hindfoot and weight of animal</li>
   <li>Changes of weight over the year based on each plot type</li>
   <li>Changes of length of hindfoot  over the year based on each plot type</li>
-  <li>Correlation between hindfoot length and genus</li>
+  <li>The relationship between hindfoot_length and weight on each plot type</li>
   <li>Correlation between hindfoot length and genus</li>
 </ul>
 
@@ -182,16 +182,136 @@ ggsave("image/plot5.jpg", final.wg, width=10, dpi=300)
 This plot explains about what is the change of length of hindfoot over the year for each plot_type. It has shown that there is no relationship of weight over the year.
 R-squared value explains that -.28 which is very low.
 
-<strong>Heva : Correlation between hindfoot length and genus</strong>
-```{r plot6}
-#heva
+<strong> The relationship between hindfoot_length and weight on each plot type</strong>
+We examined the relationship of the weight and hindfoot_length each plot type; control, long-term, rodent, short-term, and spectab exclosure. We tried to find the evident whether the increase of hindfoot_length every mm will contribute the increase or the decrease of the weight (gram) in every plot_type, and whether there is any significant difference or not among plot type. However, we compared it in genus level, not in species_id level, because we wanted to know whether there is any correlation of the chosen plot_type with the size of the weight and hindfoot_length. We also checked the r square and p value to understand about the variances and correlation.
+```{r plot6, warning=FALSE, message=FALSE}
+#Examine the correlation each plot type and hindfootlength
+#Weight and Hindfoot_length in control plot
+
+lw_control <- surveys_combined %>% 
+  filter(!is.na(hindfoot_length), !is.na(weight)) %>%
+  select(hindfoot_length, weight , genus, plot_type) %>%
+  filter(plot_type == "Control")
+#- Check names 
+names(lw_control)
+#- Attach the data
+attach(lw_control) 
+#- Check the type of variable for weight and hindfoot_length in control plot
+class(weight)
+class(hindfoot_length)
+plot(weight, hindfoot_length, main = "The relationship weight and hindfoot_length in control plottype")
+cor(weight, hindfoot_length)
+lw_controlstat <- lm(hindfoot_length ~ weight)
+summary(lw_controlstat)
+
+#Weight and Hindfoot_length in Long-term Krat Exclosure plot (2)
+lw_longterm <- surveys_combined %>% 
+  filter(!is.na(hindfoot_length), !is.na(weight)) %>%
+  select(hindfoot_length, weight , genus, plot_type) %>%
+  filter(plot_type == "Long-term Krat Exclosure")
+
+#- Check & Statistics
+names(lw_longterm)
+attach(lw_longterm)
+class(weight)
+class(hindfoot_length)
+plot(weight, hindfoot_length, main = "The relationship weight and hindfoot_length in longterm plottype")
+cor(weight, hindfoot_length)
+lw_longtermstat <- lm(hindfoot_length ~ weight)
+summary(lw_longtermstat)
+
+#Weight and Hindfoot_length in Rodent Exclosure plot (3)
+lw_rodent <- surveys_combined %>% 
+  filter(!is.na(hindfoot_length), !is.na(weight)) %>%
+  select(hindfoot_length, weight , genus, plot_type) %>%
+  filter(plot_type == "Rodent Exclosure")
+
+#- Check & Statistics
+names(lw_rodent)
+attach(lw_rodent)
+class(weight)
+class(hindfoot_length)
+plot(weight, hindfoot_length, main = "The relationship weight and hindfoot_length in rodent plottype")
+cor(weight, hindfoot_length)
+lw_rodentstat <- lm(hindfoot_length ~ weight)
+summary(lw_rodentstat)
+
+#Weight and Hindfoot_length in Short Term Exclosure plot (4)
+lw_shortterm <- surveys_combined %>% 
+  filter(!is.na(hindfoot_length), !is.na(weight)) %>%
+  select(hindfoot_length, weight , genus, plot_type) %>%
+  filter(plot_type == "Short-term Krat Exclosure")
+
+#- Check & Statistics
+names(lw_shortterm)
+attach(lw_shortterm)
+class(weight)
+class(hindfoot_length)
+plot(weight, hindfoot_length, main = "The relationship weight and hindfoot_length in shortterm plottype")
+cor(weight, hindfoot_length)
+lw_shorttermstat <- lm(hindfoot_length ~ weight)
+summary(lw_shorttermstat)
+
+# Weight and Hindfoot_length in Spectab Exclosure plot (5)
+lw_spectab <- surveys_combined %>% 
+  filter(!is.na(hindfoot_length), !is.na(weight)) %>%
+  select(hindfoot_length, weight , genus, plot_type) %>%
+  filter(plot_type == "Spectab exclosure")
+
+#- Check & Statistics
+names(lw_spectab)
+attach(lw_spectab)
+class(weight)
+class(hindfoot_length)
+plot(weight, hindfoot_length, main = "The relationship weight and hindfoot_length in spectab plottype")
+cor(weight, hindfoot_length)
+lw_spectabstat <- lm(hindfoot_length ~ weight)
+summary(lw_spectabstat)
+
+```
+Table the relationship between hindfoot_length and weight on each plot type
+
+                  Correlation 	Est.Weight	R squared 	p value
+      Control	    0.6397566	    0.16003	    0.4093	   <2.2e-16
+      Long Term	  0.6517941	    0.169583	  0.4083	   <2.2e-16
+      Rodent  	  0.6389694	    0.169583	  0.4083	   <2.2e-16
+      Short Term	0.7135483   	0.18194	    0.5092	   <2.2e-16
+      Spectab	    0.7327848   	0.184094	  0.537	     <2.2e-16
+
+The table summaries the results above. The hindfoot_length is dependent variable and the weight is independent variable. For instance, it can be seen that the Spectab plot type has the greatest correlation of others, and the spectab has the higher correlation than control plot type (0.7327848 compare to 0.6397566). Like others, the Spectab also has positive and biggest weight (0.184094). It means that under the Spectab plot, every 1 mm increases of hindfoot_length will "increase" 0.184094 gram of the weight. The Spectab has the highest R Square number than others (0.537) which means that the Spectab explains 53,70% variances in the model. It has bigger variances which means that the values vary and disperse. The values do not congregate close to fitted line (mean) because the values vary (not relatively same) from mean value. p value is under 0.05 and very low which means Reject NULL hypothesis. Therefore, it has strong evidence of hindfoot_length and weight relationship as aforementioned.
+
+<strong> Comparation between hindfoot length under each plot type</strong>
+Plot 7 is supposed to compare among datasets. It is continuation from plot 6. After knowing the correlation, variance, and evidence levels, we want to compare 5 plot types to determine the best fit model.
+```{r plot7, warning=FALSE, message=FALSE}
+#Check the relationship and dispersal each plot
+        length_control <- surveys_combined%>%
+          select(hindfoot_length, plot_type , genus) %>%
+          filter(plot_type == "Control")
+        
+        length_Longterm <- surveys_combined %>%
+          select(hindfoot_length, plot_type , genus) %>%
+          filter(plot_type == "Long-term Krat Exclosure")
+        
+        length_rodent <- surveys_combined %>%
+          select(hindfoot_length, plot_type , genus) %>%
+          filter(plot_type == "Rodent Exclosure")
+        
+        length_shortterm <- surveys_combined %>%
+          select(hindfoot_length, plot_type , genus) %>%
+          filter(plot_type == "Short-term Krat Exclosure")
+        
+        length_spectab <- surveys_combined %>%
+          select(hindfoot_length, plot_type , genus) %>%
+          filter(plot_type == "Spectab exclosure") 
+        
+        #Ggplot hindfoot_length and plot_type
+          ggplot() +
+          geom_point(data = length_control, aes(x=plot_type, y=hindfoot_length), color = 'green') +
+          geom_point(data = length_Longterm, aes(x=plot_type, y=hindfoot_length), color = 'red') +
+          geom_point(data = length_rodent, aes(x=plot_type, y=hindfoot_length), color = 'blue') +
+          geom_point(data = length_shortterm, aes(x=plot_type, y=hindfoot_length), color = 'yellow') +
+          geom_point(data = length_spectab, aes(x=plot_type, y=hindfoot_length), color = 'pink') 
 
 ```
 
-
-<strong>Heva : Correlation between hindfoot length and genus</strong>
-```{r plot7}
-#heva
-
-```
-
+To compare 5 variables should be done with Anova. However, it is challenging to combine 5 datasets and arrange them in associated columns. Nonetheless, from given graph, it looks like control and spectab resulting higher hindfoot_length and the resf of them; Long-term, short-term and rodent exclosure are relatively same. Hence, depending on purpose, we could select which methods we would use.
