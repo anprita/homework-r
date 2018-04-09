@@ -36,6 +36,9 @@ Index.html:
 
 We created knited html file where you can see all codes and also the plots that we created through our codes.
 
+Index.pdf:
+We print the index.html file to pdf version.
+
 Index_su.R:
 
 Supria created this Rfile for exploring different plots by ownself.
